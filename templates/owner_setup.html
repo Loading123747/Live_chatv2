@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Owner Setup</title>
+    <style>
+        body {
+            background-color: black;
+            color: green;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding-top: 50px;
+        }
+        input, button {
+            width: 300px;
+            padding: 10px;
+            margin: 10px 0;
+            border: 2px solid green;
+            background-color: black;
+            color: green;
+        }
+        button:hover {
+            background-color: green;
+            color: black;
+        }
+    </style>
+</head>
+<body>
+    <h1>Set Your Username</h1>
+    <form method="POST" action="/setup_owner">
+        <input type="text" name="username" placeholder="Enter your chat username" required><br>
+        <button type="submit">Submit</button>
+    </form>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+        body {
+            background-color: black;
+            color: green;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding-top: 50px;
+        }
+        .login-container {
+            margin: auto;
+            width: 300px;
+        }
+        input, button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 2px solid green;
+            background-color: black;
+            color: green;
+        }
+        button:hover {
+            background-color: green;
+            color: black;
+        }
+    </style>
+</head>
+<body>
+    <h1>If you are not the owner, click "Guest" to log in normally</h1>
+    <div class="login-container">
+        <form method="POST" action="/handle_login">
+            <input type="text" name="username" placeholder="Username" required><br>
+            <input type="password" name="password" placeholder="Password"><br>
+            <button type="submit">Login</button>
+        </form>
+
+        <form method="POST" action="/handle_login">
+            <input type="text" name="username" placeholder="Username" required>
+            <input type="hidden" name="password" value=""> <!-- Hidden password field for guest -->
+            <button type="submit">Guest Login</button>
+        </form>
+    </div>
+</body>
+</html>

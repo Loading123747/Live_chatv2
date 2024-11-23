@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat</title>
+    <style>
+        body {
+            background-color: black;
+            color: green;
+            font-family: Arial, sans-serif;
+        }
+        #messages {
+            height: 300px;
+            overflow-y: scroll;
+            border: 2px solid green;
+            padding: 10px;
+            margin: 20px;
+        }
+        input {
+            width: 70%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 2px solid green;
+            background-color: black;
+            color: green;
+        }
+        button {
+            width: 25%;
+            padding: 10px;
+            border: 2px solid green;
+            background-color: black;
+            color: green;
+        }
+    </style>
+    <script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
+</head>
+<body>
+    <h1>Welcome to the Chat, {{ username }}</h1>
+    <div id="messages"></div>
+    <input type="text" id="message" placeholder="Type your message...">
+    <button onclick="sendMessage()">Send</button>
+
+    {% if role == 'owner' %}
+    <h2>Ban User</h2>
+    <input type="text" id="ban_user" placeholder="Username to ban">
+    <input type="number" id="ban_duration" placeholder="Duration in minutes">
+    <button onclick="banUser()">Ban</button>
+    {% endif %}
+
+    <script>
+        const socket = io();
+
+        function sendMessage() {
+            const message = document.getElementById('message').value;
+            socket.emit('message', message);
+            document.getElementById('message').value = '';
+        }
+
+        socket.on('message', function(msg) {
+            const messages = document.getElementById('messages');
+            messages.innerHTML += `<p>${msg}</p>`;
+        });
+
+        function banUser() {
+            const username = document.getElementById('ban_user').value;
+            const duration = document.getElementById('ban_duration').value;
+            socket.emit('ban_user', { username, duration });
+        }
+    </script>
+</body>
+</html>
