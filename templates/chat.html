@@ -11,26 +11,24 @@
             font-family: Arial, sans-serif;
         }
         #messages {
-            height: 300px;
-            overflow-y: scroll;
+            height: 400px;
+            overflow-y: auto;
             border: 2px solid green;
             padding: 10px;
             margin: 20px;
         }
-        input {
-            width: 70%;
+        input, button {
             padding: 10px;
             margin: 10px 0;
             border: 2px solid green;
             background-color: black;
             color: green;
         }
+        input {
+            width: 70%;
+        }
         button {
             width: 25%;
-            padding: 10px;
-            border: 2px solid green;
-            background-color: black;
-            color: green;
         }
     </style>
     <script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
@@ -43,30 +41,50 @@
 
     {% if role == 'owner' %}
     <h2>Ban User</h2>
-    <input type="text" id="ban_user" placeholder="Username to ban">
-    <input type="number" id="ban_duration" placeholder="Duration in minutes">
-    <button onclick="banUser()">Ban</button>
+    <div>
+        <input type="text" id="ban_user" placeholder="Username to ban">
+        <input type="number" id="ban_duration" placeholder="Duration in minutes">
+        <button onclick="banUser()">Ban</button>
+    </div>
     {% endif %}
 
     <script>
         const socket = io();
 
+        document.getElementById('message').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
         function sendMessage() {
             const message = document.getElementById('message').value;
-            socket.emit('message', message);
+            socket.emit('message', message || '');
             document.getElementById('message').value = '';
         }
 
         socket.on('message', function(msg) {
             const messages = document.getElementById('messages');
             messages.innerHTML += `<p>${msg}</p>`;
+            messages.scrollTop = messages.scrollHeight; // Scroll to the latest message
         });
 
         function banUser() {
-            const username = document.getElementById('ban_user').value;
-            const duration = document.getElementById('ban_duration').value;
-            socket.emit('ban_user', { username, duration });
+            const username = document.getElementById('ban_user').value.trim();
+            const duration = document.getElementById('ban_duration').value.trim();
+
+            if (username && duration) {
+                socket.emit('ban_user', { username, duration });
+                alert(`${username} has been banned for ${duration} minutes.`);
+            } else {
+                alert('Please fill in both fields to ban a user.');
+            }
         }
+
+        socket.on('user_banned', function(data) {
+            const messages = document.getElementById('messages');
+            messages.innerHTML += `<p style="color: red;">${data.username} has been banned.</p>`;
+        });
     </script>
 </body>
 </html>
